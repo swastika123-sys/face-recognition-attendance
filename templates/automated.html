@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Automated Attendance - FaceRecSys</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+  {% if not session.get('user') %}
+    <script>
+      window.location.href = "{{ url_for('login') }}";
+    </script>
+  {% endif %}
+  <style>
+    /* Futuristic Background */
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://media.istockphoto.com/id/1352322853/vector/biometric-facial-recognition.jpg?s=612x612&w=0&k=20&c=0p4h1qmSH3Y2ueztOyZI_eR41u6dHQZj4U0z7wfd3oo=') center center / cover no-repeat,
+                  linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      opacity: 0.3;
+      z-index: 1;
+    }
+
+    @keyframes autoGridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-20px, -20px); }
+    }
+
+    /* Floating particles */
+    .floating-particle {
+      position: fixed;
+      width: 3px;
+      height: 3px;
+      background: #00ffff;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00ffff;
+      animation: float 6s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.6; }
+      25% { transform: translateY(-30px) translateX(20px); opacity: 1; }
+      50% { transform: translateY(-15px) translateX(-25px); opacity: 0.8; }
+      75% { transform: translateY(-40px) translateX(15px); opacity: 1; }
+    }
+
+    /* Container styling */
+    .container {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Page Header */
+    .page-header {
+      margin: 60px 0 40px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .page-header h1 {
+      color: #ffffff;
+      font-size: 3rem;
+      font-weight: 700;
+      text-shadow: 0 4px 20px rgba(0, 255, 255, 0.5);
+      margin-bottom: 15px;
+      animation: titleGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes titleGlow {
+      0%, 100% { text-shadow: 0 4px 20px rgba(0, 255, 255, 0.5); }
+      50% { text-shadow: 0 4px 30px rgba(0, 255, 255, 0.8); }
+    }
+
+    .page-header p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.2rem;
+      margin-bottom: 0;
+    }
+
+    /* Dashboard Cards */
+    .dashboard-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(15px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+      min-height: 200px;
+    }
+
+    .dashboard-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .dashboard-card:hover::before {
+      opacity: 1;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.05; }
+      50% { transform: scale(1.1); opacity: 0.1; }
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0, 255, 255, 0.6);
+      box-shadow: 0 25px 50px rgba(0, 255, 255, 0.2);
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      color: #00ffff;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+      position: relative;
+      z-index: 2;
+    }
+
+    .dashboard-card h4 {
+      color: #ffffff;
+      font-weight: 600;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .dashboard-card p {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 20px;
+    }
+
+    .btn-futuristic {
+      background: linear-gradient(45deg, #00ffff, #0080ff);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 25px;
+      font-weight: 600;
+      color: #000;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-futuristic:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
+      color: #000;
+      text-decoration: none;
+    }
+
+    .btn-futuristic::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-futuristic:hover::before {
+      left: 100%;
+    }
+
+    /* Status indicators */
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .status-active {
+      background: #00ff00;
+      box-shadow: 0 0 8px #00ff00;
+      animation: statusBlink 2s infinite;
+    }
+
+    .status-inactive {
+      background: #ff4444;
+      box-shadow: 0 0 8px #ff4444;
+    }
+
+    @keyframes statusBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Footer styling */
+    footer {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(0, 255, 255, 0.3);
+      color: white;
+      padding: 30px 0;
+      text-align: center;
+      margin-top: 60px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Alert styling */
+    .alert-futuristic {
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .alert-futuristic h5 {
+      color: #00ffff;
+      margin-bottom: 10px;
+    }
+
+    .alert-futuristic p {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .page-header h1 {
+        font-size: 2.2rem;
+      }
+      
+      .dashboard-card {
+        padding: 25px 20px;
+        min-height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Add floating particles -->
+  <div class="floating-particle" style="top: 15%; left: 10%; animation-delay: 0s;"></div>
+  <div class="floating-particle" style="top: 60%; left: 85%; animation-delay: 1s;"></div>
+  <div class="floating-particle" style="top: 30%; left: 70%; animation-delay: 2s;"></div>
+  <div class="floating-particle" style="top: 80%; left: 20%; animation-delay: 3s;"></div>
+  <div class="floating-particle" style="top: 45%; left: 5%; animation-delay: 4s;"></div>
+  <div class="floating-particle" style="top: 75%; left: 90%; animation-delay: 5s;"></div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+      <img src="https://miro.medium.com/v2/resize:fit:2000/1*DPNoWJ3Au35Fw58Sn2oj1w.png" alt="Logo" width="40" height="40" class="rounded-circle me-2">
+      FaceRecSys
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        {% if session.get('user') %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('student') }}">Students</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('attendance') }}">Attendance</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{{ url_for('automated') }}">Manual Attendance</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('setting') }}">Settings</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('help_page') }}">Help</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('why_choose') }}">Why Choose Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Our Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('help_page') }}">Help</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <h1>Manual Attendance Center</h1>
+    <p>Biometric Facial Recognition Interface</p>
+  </div>
+
+  <!-- Status Dashboard -->
+  <div class="row mb-4">
+    <div class="col-lg-4 col-md-6">
+      <div class="dashboard-card text-center">
+        <div class="card-icon"><i class="bi bi-robot"></i></div>
+        <h4>AI System Status</h4>
+        <p><span class="status-indicator status-active"></span>Neural Networks Online</p>
+        <p>99.99% Accuracy | 24/7 Operation</p>
+        <a href="{{ url_for('realtime') }}" class="btn-futuristic">Launch Scanner</a>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="dashboard-card text-center">
+        <div class="card-icon"><i class="bi bi-graph-up"></i></div>
+        <h4>Live Analytics</h4>
+        <p><span class="status-indicator status-active"></span>Real-time Processing</p>
+        <p>Quantum Data Analysis Active</p>
+        <a href="{{ url_for('attendance') }}" class="btn-futuristic">View Reports</a>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="dashboard-card text-center">
+        <div class="card-icon"><i class="bi bi-shield-check"></i></div>
+        <h4>Security Protocol</h4>
+        <p><span class="status-indicator status-active"></span>Encryption Active</p>
+        <p>Blockchain Verification Enabled</p>
+        <a href="{{ url_for('setting') }}" class="btn-futuristic">Configure</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="alert-futuristic mb-4">
+    <h5><i class="bi bi-lightning-charge me-2"></i>Manual Entry Operations</h5>
+    <p>Access manual attendance entry functions through biometric facial recognition interface. All operations are encrypted and verified through secure protocols.</p>
+  </div>
+
+  <!-- Attendance Input Form -->
+  <div class="dashboard-card mb-4">
+    <h4><i class="bi bi-plus-circle me-2"></i>Neural Record Input</h4>
+    <form id="attendanceForm" class="row g-3 align-items-center">
+      <div class="col-md-3">
+        <label class="form-label">Date Protocol</label>
+        <input type="date" id="date" class="form-control" required style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(0, 255, 255, 0.3); color: #ffffff; border-radius: 10px;" />
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Neural ID</label>
+        <input type="text" id="studentId" class="form-control" placeholder="Student ID" required style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(0, 255, 255, 0.3); color: #ffffff; border-radius: 10px;" />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Identity Matrix</label>
+        <input type="text" id="studentName" class="form-control" placeholder="Full Name" required style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(0, 255, 255, 0.3); color: #ffffff; border-radius: 10px;" />
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Status Code</label>
+        <select id="status" class="form-select" required style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(0, 255, 255, 0.3); color: #ffffff; border-radius: 10px;">
+          <option value="" disabled selected>Status</option>
+          <option value="Present">✓ Present</option>
+          <option value="Absent">✗ Absent</option>
+          <option value="Late">⚠ Late</option>
+        </select>
+      </div>
+      <div class="col-md-2 d-grid">
+        <label class="form-label">&nbsp;</label>
+        <button type="submit" class="btn-futuristic">Transmit Data</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Attendance Table -->
+  <div class="dashboard-card">
+    <h4><i class="bi bi-database me-2"></i>Neural Database Records</h4>
+    <div class="table-responsive">
+      <table class="table" id="attendanceTable" style="color: #ffffff;">
+        <thead style="background: rgba(0, 255, 255, 0.1); border-bottom: 2px solid rgba(0, 255, 255, 0.3);">
+          <tr>
+            <th style="color: #00ffff; border: 1px solid rgba(0, 255, 255, 0.2);">Date Protocol</th>
+            <th style="color: #00ffff; border: 1px solid rgba(0, 255, 255, 0.2);">Neural ID</th>
+            <th style="color: #00ffff; border: 1px solid rgba(0, 255, 255, 0.2);">Identity Matrix</th>
+            <th style="color: #00ffff; border: 1px solid rgba(0, 255, 255, 0.2);">Status Code</th>
+            <th style="color: #00ffff; border: 1px solid rgba(0, 255, 255, 0.2);">Time In</th>
+            <th style="color: #00ffff; border: 1px solid rgba(0, 255, 255, 0.2);">Time Out</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Neural records appear here -->
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Export Button -->
+    <button id="exportBtn" class="btn-futuristic mt-3">
+      <i class="bi bi-download me-2"></i>Export Neural Data
+    </button>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 FaceRecSys | AI-Powered Attendance for Smart Institutions</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Helper to format time (now) for Time In/Out columns
+  function getCurrentTime() {
+    const now = new Date();
+    return now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+  }
+
+  // Add attendance record to the table
+  document.getElementById('attendanceForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const date = document.getElementById('date').value;
+    const studentId = document.getElementById('studentId').value.trim();
+    const studentName = document.getElementById('studentName').value.trim();
+    const status = document.getElementById('status').value;
+
+    if (!date || !studentId || !studentName || !status) return;
+
+    const tbody = document.querySelector('#attendanceTable tbody');
+    const tr = document.createElement('tr');
+
+    // Set Time In and Time Out based on status
+    let timeIn = '-';
+    let timeOut = '-';
+
+    if (status === 'Present' || status === 'Late') {
+      timeIn = getCurrentTime();
+      timeOut = '-';
+    }
+
+    // Status badge colors for futuristic theme
+    let badgeClass = 'bg-secondary';
+    let statusSymbol = '';
+    if (status === 'Present') {
+      badgeClass = 'bg-success';
+      statusSymbol = '✓ ';
+    } else if (status === 'Absent') {
+      badgeClass = 'bg-danger';
+      statusSymbol = '✗ ';
+    } else if (status === 'Late') {
+      badgeClass = 'bg-warning text-dark';
+      statusSymbol = '⚠ ';
+    }
+
+    tr.innerHTML = `
+      <td style="border: 1px solid rgba(0, 255, 255, 0.2); color: rgba(255, 255, 255, 0.9);">${date}</td>
+      <td style="border: 1px solid rgba(0, 255, 255, 0.2); color: rgba(255, 255, 255, 0.9);">${studentId}</td>
+      <td style="border: 1px solid rgba(0, 255, 255, 0.2); color: rgba(255, 255, 255, 0.9);">${studentName}</td>
+      <td style="border: 1px solid rgba(0, 255, 255, 0.2);"><span class="badge ${badgeClass}">${statusSymbol}${status}</span></td>
+      <td style="border: 1px solid rgba(0, 255, 255, 0.2); color: rgba(255, 255, 255, 0.9);">${timeIn}</td>
+      <td style="border: 1px solid rgba(0, 255, 255, 0.2); color: rgba(255, 255, 255, 0.9);">${timeOut}</td>
+    `;
+
+    tbody.appendChild(tr);
+
+    // Reset form
+    this.reset();
+  });
+
+  // Export table data to CSV file
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    const rows = Array.from(document.querySelectorAll('#attendanceTable tr'));
+    if (rows.length <= 1) {
+      alert('🤖 Neural Database: No records detected for export transmission!');
+      return;
+    }
+
+    let csvContent = '';
+    rows.forEach(row => {
+      const cols = Array.from(row.querySelectorAll('th, td'));
+      const rowData = cols.map(col => {
+        // Strip HTML tags if any (like badge span)
+        const text = col.innerText || col.textContent;
+        return `"${text.replace(/"/g, '""')}"`; // Escape double quotes
+      });
+      csvContent += rowData.join(',') + '\r\n';
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'neural_attendance_data.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>

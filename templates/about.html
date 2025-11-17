@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About Us - Face Recognition System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    /* Futuristic Background */
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      color: #ffffff;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><pattern id="about-neural" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="2" fill="%2300ffff" opacity="0.4"><animate attributeName="opacity" values="0.2;0.8;0.2" dur="3s" repeatCount="indefinite"/></circle><line x1="0" y1="20" x2="40" y2="20" stroke="%2300ffff" stroke-width="0.4" opacity="0.1"/><line x1="20" y1="0" x2="20" y2="40" stroke="%2300ffff" stroke-width="0.4" opacity="0.1"/><line x1="0" y1="0" x2="40" y2="40" stroke="%2300ffff" stroke-width="0.3" opacity="0.08"/></pattern></defs><rect width="120" height="120" fill="url(%23about-neural)"/></svg>');
+      animation: aboutNeuralMove 25s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes aboutNeuralMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-40px, -40px); }
+    }
+
+    /* Floating particles */
+    .floating-particle {
+      position: fixed;
+      width: 5px;
+      height: 5px;
+      background: #00ffff;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #00ffff;
+      animation: float 9s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.4; }
+      25% { transform: translateY(-50px) translateX(30px); opacity: 1; }
+      50% { transform: translateY(-25px) translateX(-40px); opacity: 0.7; }
+      75% { transform: translateY(-60px) translateX(25px); opacity: 1; }
+    }
+
+    /* Banner Section */
+    .futuristic-about-banner {
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 255, 255, 0.15)), 
+                  url('https://epe.brightspotcdn.com/dims4/default/3440acf/2147483647/strip/true/crop/1695x1150+13+0/resize/840x570!/quality/90/?url=https%3A%2F%2Fepe-brightspot.s3.us-east-1.amazonaws.com%2F53%2Fc9%2F8a96a2eb465e89e9d18fa364a671%2F102023-lead-image-facial-recognition-gt.jpg') no-repeat center center/cover;
+      height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .futuristic-about-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150"><defs><pattern id="about-hexagon" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 52,15 52,37 30,50 8,37 8,15" fill="none" stroke="%2300ffff" stroke-width="0.6" opacity="0.2"/><circle cx="30" cy="26" r="1.5" fill="%2300ffff" opacity="0.5"><animate attributeName="opacity" values="0.2;0.9;0.2" dur="4s" repeatCount="indefinite"/></circle></pattern></defs><rect width="150" height="150" fill="url(%23about-hexagon)"/></svg>');
+      animation: aboutHexagonFlow 30s linear infinite;
+    }
+
+    @keyframes aboutHexagonFlow {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-60px, -52px); }
+    }
+
+    .about-banner-content {
+      position: relative;
+      z-index: 3;
+    }
+
+    .about-banner-content h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 4px 25px rgba(0, 255, 255, 0.7);
+      margin-bottom: 20px;
+      animation: aboutTitleGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes aboutTitleGlow {
+      0%, 100% { text-shadow: 0 4px 25px rgba(0, 255, 255, 0.7); }
+      50% { text-shadow: 0 4px 35px rgba(0, 255, 255, 1); }
+    }
+
+    .about-banner-content .lead {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Container styling */
+    .container {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* About Sections */
+    .about-section {
+      padding: 80px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-title {
+      text-align: center;
+      color: #ffffff;
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 60px;
+      text-shadow: 0 2px 15px rgba(0, 255, 255, 0.4);
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #00ffff, transparent);
+      border-radius: 2px;
+    }
+
+    .about-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 40px;
+      backdrop-filter: blur(15px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+      min-height: 280px;
+    }
+
+    .about-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .about-card:hover::before {
+      opacity: 1;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.05; }
+      50% { transform: scale(1.1); opacity: 0.1; }
+    }
+
+    .about-card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(0, 255, 255, 0.6);
+      box-shadow: 0 25px 50px rgba(0, 255, 255, 0.2);
+    }
+
+    .about-icon {
+      font-size: 3.5rem;
+      color: #00ffff;
+      margin-bottom: 25px;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      position: relative;
+      z-index: 2;
+    }
+
+    .about-card h4 {
+      color: #ffffff;
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .about-card p {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.7;
+      position: relative;
+      z-index: 2;
+      font-size: 1rem;
+    }
+
+    /* Stats Section */
+    .stats-section {
+      background: rgba(0, 255, 255, 0.05);
+      padding: 60px 0;
+      border-top: 1px solid rgba(0, 255, 255, 0.2);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+    }
+
+    .stat-item {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #00ffff;
+      text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .stat-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* Footer styling */
+    footer {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(0, 255, 255, 0.3);
+      color: white;
+      padding: 30px 0;
+      text-align: center;
+      margin-top: 60px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .about-banner-content h1 {
+        font-size: 2.8rem;
+      }
+      
+      .section-title {
+        font-size: 2.2rem;
+      }
+      
+      .about-card {
+        padding: 30px 20px;
+        min-height: 250px;
+      }
+      
+      .stat-number {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Add floating particles -->
+  <div class="floating-particle" style="top: 8%; left: 12%; animation-delay: 0s;"></div>
+  <div class="floating-particle" style="top: 55%; left: 88%; animation-delay: 1s;"></div>
+  <div class="floating-particle" style="top: 25%; left: 78%; animation-delay: 2s;"></div>
+  <div class="floating-particle" style="top: 75%; left: 18%; animation-delay: 3s;"></div>
+  <div class="floating-particle" style="top: 40%; left: 5%; animation-delay: 4s;"></div>
+  <div class="floating-particle" style="top: 90%; left: 65%; animation-delay: 5s;"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+        <img src="https://miro.medium.com/v2/resize:fit:2000/1*DPNoWJ3Au35Fw58Sn2oj1w.png" alt="Logo" width="40" height="40" class="rounded-circle me-2">
+        FaceRecSys
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('why_choose') }}">Why Choose Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Our Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('help_page') }}">Help</a></li>
+          {% if session.get('user') %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Banner -->
+  <div class="futuristic-about-banner">
+    <div class="about-banner-content">
+      <h1>Neural Genesis</h1>
+      <p class="lead">Pioneers of Quantum Biometric Intelligence</p>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <section class="about-section">
+    <div class="container">
+      <h2 class="section-title">The Future is Now</h2>
+      <div class="row">
+        <div class="col-lg-4 col-md-6">
+          <div class="about-card text-center">
+            <div class="about-icon"><i class="bi bi-cpu"></i></div>
+            <h4>Quantum Processing</h4>
+            <p>Our revolutionary neural networks process biometric data at quantum speeds, utilizing advanced machine learning algorithms to achieve 99.99% accuracy in facial recognition and identity verification.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="about-card text-center">
+            <div class="about-icon"><i class="bi bi-shield-lock"></i></div>
+            <h4>Blockchain Security</h4>
+            <p>Military-grade encryption combined with blockchain technology ensures that all biometric data is stored with zero-knowledge proof systems, protecting user privacy with enterprise-level security protocols.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="about-card text-center">
+            <div class="about-icon"><i class="bi bi-globe"></i></div>
+            <h4>Global Innovation</h4>
+            <p>Connecting institutions worldwide through our cloud-native platform, enabling seamless attendance management across multiple locations with real-time synchronization and predictive analytics.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-item">
+            <span class="stat-number">99.99%</span>
+            <div class="stat-label">Accuracy Rate</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-item">
+            <span class="stat-number">1M+</span>
+            <div class="stat-label">Users Globally</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-item">
+            <span class="stat-number">50+</span>
+            <div class="stat-label">Countries</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-item">
+            <span class="stat-number">24/7</span>
+            <div class="stat-label">AI Support</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission & Vision Section -->
+  <section class="about-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="about-card">
+            <div class="about-icon text-start"><i class="bi bi-rocket-takeoff"></i></div>
+            <h4>Our Quantum Mission</h4>
+            <p>To revolutionize human identification through quantum-enhanced AI, creating a seamless bridge between physical and digital worlds. We aim to eliminate traditional attendance barriers using contactless biometric intelligence that adapts, learns, and evolves with each interaction.</p>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="about-card">
+            <div class="about-icon text-start"><i class="bi bi-eye"></i></div>
+            <h4>Our Neural Vision</h4>
+            <p>To become the global standard for biometric authentication, powering smart cities, educational institutions, and corporate environments worldwide. We envision a future where identity verification is instant, secure, and completely frictionless through advanced neural networks.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 FaceRecSys | AI-Powered Attendance for Smart Institutions</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

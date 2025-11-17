@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Why Choose Us - Face Recognition Attendance System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    /* Futuristic Background */
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      color: #ffffff;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="neural-grid" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="12.5" cy="12.5" r="1" fill="%2300ffff" opacity="0.3"><animate attributeName="opacity" values="0.1;0.6;0.1" dur="3s" repeatCount="indefinite"/></circle><line x1="12.5" y1="0" x2="12.5" y2="25" stroke="%2300ffff" stroke-width="0.3" opacity="0.1"/><line x1="0" y1="12.5" x2="25" y2="12.5" stroke="%2300ffff" stroke-width="0.3" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23neural-grid)"/></svg>');
+      animation: neuralMove 20s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes neuralMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-25px, -25px); }
+    }
+
+    /* Floating particles */
+    .floating-particle {
+      position: fixed;
+      width: 3px;
+      height: 3px;
+      background: #00ffff;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00ffff;
+      animation: float 8s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.5; }
+      25% { transform: translateY(-40px) translateX(20px); opacity: 1; }
+      50% { transform: translateY(-20px) translateX(-30px); opacity: 0.7; }
+      75% { transform: translateY(-50px) translateX(15px); opacity: 1; }
+    }
+
+    /* Banner Section */
+    .futuristic-banner {
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 255, 255, 0.1)), 
+                  url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+      height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .futuristic-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><pattern id="banner-circuit" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="2" fill="%2300ffff" opacity="0.4"><animate attributeName="opacity" values="0.2;0.8;0.2" dur="4s" repeatCount="indefinite"/></circle><line x1="20" y1="0" x2="20" y2="40" stroke="%2300ffff" stroke-width="0.5" opacity="0.2"/><line x1="0" y1="20" x2="40" y2="20" stroke="%2300ffff" stroke-width="0.5" opacity="0.2"/></pattern></defs><rect width="200" height="200" fill="url(%23banner-circuit)"/></svg>');
+      animation: bannerCircuitFlow 25s linear infinite;
+    }
+
+    @keyframes bannerCircuitFlow {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-40px, -40px); }
+    }
+
+    .banner-content {
+      position: relative;
+      z-index: 3;
+    }
+
+    .banner-content h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 4px 15px rgba(0, 255, 255, 0.5);
+      margin-bottom: 20px;
+      animation: titleGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes titleGlow {
+      0%, 100% { text-shadow: 0 4px 15px rgba(0, 255, 255, 0.5); }
+      50% { text-shadow: 0 4px 25px rgba(0, 255, 255, 0.8); }
+    }
+
+    .banner-content .lead {
+      font-size: 1.3rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Container styling */
+    .container {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Why Choose Cards */
+    .why-choose-section {
+      padding: 80px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-title {
+      text-align: center;
+      color: #ffffff;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 60px;
+      text-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #00ffff, transparent);
+      border-radius: 2px;
+    }
+
+    .why-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .why-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .why-card:hover::before {
+      opacity: 1;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.05; }
+      50% { transform: scale(1.1); opacity: 0.1; }
+    }
+
+    .why-card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(0, 255, 255, 0.6);
+      box-shadow: 0 25px 50px rgba(0, 255, 255, 0.2);
+    }
+
+    .why-icon {
+      font-size: 3.5rem;
+      color: #00ffff;
+      margin-bottom: 25px;
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+
+    .why-card h4 {
+      color: #ffffff;
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .why-card p {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      position: relative;
+      z-index: 2;
+      font-size: 1rem;
+    }
+
+    /* Footer styling */
+    footer {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(0, 255, 255, 0.3);
+      color: white;
+      padding: 30px 0;
+      text-align: center;
+      margin-top: 60px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Futuristic Button Styles */
+    .btn-futuristic {
+      display: inline-block;
+      position: relative;
+      background: linear-gradient(45deg, #00ffff, #0080ff, #00ffff);
+      border: none;
+      border-radius: 25px;
+      padding: 15px 40px;
+      color: #000;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 255, 255, 0.3);
+      background-size: 300% 300%;
+      animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .btn-futuristic:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 255, 255, 0.5);
+      color: #000;
+      text-decoration: none;
+    }
+
+    .btn-futuristic::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-futuristic:hover::before {
+      left: 100%;
+    }
+
+    .btn-text {
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.3), transparent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+      z-index: 1;
+    }
+
+    .btn-futuristic:hover .btn-glow {
+      width: 200%;
+      height: 200%;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .banner-content h1 {
+        font-size: 2.5rem;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .why-card {
+        min-height: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Add floating particles -->
+  <div class="floating-particle" style="top: 10%; left: 15%; animation-delay: 0s;"></div>
+  <div class="floating-particle" style="top: 60%; left: 80%; animation-delay: 1s;"></div>
+  <div class="floating-particle" style="top: 30%; left: 70%; animation-delay: 2s;"></div>
+  <div class="floating-particle" style="top: 80%; left: 20%; animation-delay: 3s;"></div>
+  <div class="floating-particle" style="top: 15%; left: 85%; animation-delay: 4s;"></div>
+  <div class="floating-particle" style="top: 75%; left: 10%; animation-delay: 5s;"></div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+        <img src="https://miro.medium.com/v2/resize:fit:2000/1*DPNoWJ3Au35Fw58Sn2oj1w.png" alt="Logo" width="40" height="40" class="rounded-circle me-2">
+        FaceRecSys
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{{ url_for('why_choose') }}">Why Choose Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Our Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('help_page') }}">Help</a></li>
+          {% if session.get('user') %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="futuristic-banner">
+    <div class="banner-content">
+      <h1>Why Choose Us?</h1>
+      <p class="lead">Experience the Future of Attendance Management</p>
+    </div>
+  </div>
+
+  <section class="why-choose-section">
+    <div class="container">
+      <h2 class="section-title">Our Quantum Advantages</h2>
+      <div class="row">
+        <div class="col-lg-4 col-md-6">
+          <div class="why-card">
+            <div class="why-icon"><i class="bi bi-speedometer2"></i></div>
+            <h4>Quantum-Speed Processing</h4>
+            <p>Revolutionary AI algorithms process facial recognition in milliseconds, eliminating wait times and creating seamless attendance experiences with 99.99% accuracy.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="why-card">
+            <div class="why-icon"><i class="bi bi-shield-lock"></i></div>
+            <h4>Military-Grade Security</h4>
+            <p>Advanced blockchain encryption and zero-knowledge proof systems protect biometric data with enterprise-level security protocols used by top government agencies.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="why-card">
+            <div class="why-icon"><i class="bi bi-robot"></i></div>
+            <h4>AI-Powered Intelligence</h4>
+            <p>Neural networks continuously learn and adapt, providing predictive analytics, behavioral insights, and automated fraud detection for complete attendance management.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="why-card">
+            <div class="why-icon"><i class="bi bi-cloud-check"></i></div>
+            <h4>Contactless Innovation</h4>
+            <p>Touch-free technology with advanced computer vision eliminates physical contact while maintaining precise identification through advanced biometric algorithms.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="why-card">
+            <div class="why-icon"><i class="bi bi-graph-up"></i></div>
+            <h4>Real-Time Analytics</h4>
+            <p>Live dashboards with predictive modeling, attendance forecasting, and behavioral pattern analysis provide actionable insights for administrators and managers.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="why-card">
+            <div class="why-icon"><i class="bi bi-globe"></i></div>
+            <h4>Global Scalability</h4>
+            <p>Cloud-native architecture supports unlimited users across multiple locations with 24/7 uptime, automatic backups, and enterprise-grade infrastructure.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <a href="{{ url_for('services') }}" class="btn-futuristic btn-lg">
+          <span class="btn-text">Explore Our Services</span>
+          <div class="btn-glow"></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 FaceRecSys | AI-Powered Attendance for Smart Institutions</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

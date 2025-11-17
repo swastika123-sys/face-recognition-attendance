@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Help - Face Recognition Attendance System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1500&q=80') center center / cover no-repeat,
+                  linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      opacity: 0.25;
+      z-index: 1;
+    }
+    .help-banner {
+      background: url('https://collectionperformance.com/wp-content/uploads/2023/01/digitization-transformation-earth-5231610.jpg') no-repeat center center/cover;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 2px 2px 8px #000;
+    }
+
+    .help-banner h1 {
+      font-size: 3rem;
+    }
+
+    .accordion-button {
+      font-weight: 500;
+    }
+
+    .futuristic-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(0,255,255,0.25);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #fff;
+      margin-bottom: 2rem;
+      padding: 2rem 2.5rem;
+      position: relative;
+      z-index: 2;
+    }
+    .futuristic-card h2, .futuristic-card h3, .futuristic-card h4 {
+      color: #00ffff;
+      text-shadow: 0 0 12px #00ffff99;
+    }
+    .futuristic-card a {
+      color: #00ffff;
+      text-decoration: underline;
+    }
+    .futuristic-card a:hover {
+      color: #fff;
+      text-shadow: 0 0 8px #00ffff;
+    }
+    .futuristic-btn {
+      background: linear-gradient(45deg, #00ffff, #0080ff);
+      border: none;
+      border-radius: 10px;
+      padding: 10px 24px;
+      font-weight: 600;
+      color: #000;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 8px 25px rgba(0,255,255,0.15);
+    }
+    .futuristic-btn:hover {
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 10px 25px rgba(0,255,255,0.3);
+      color: #000;
+      text-decoration: none;
+    }
+    .futuristic-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    .futuristic-btn:hover::before {
+      left: 100%;
+    }
+    .floating-particle {
+      position: fixed;
+      width: 3px;
+      height: 3px;
+      background: #00ffff;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00ffff;
+      animation: float 6s ease-in-out infinite;
+      z-index: 1;
+    }
+    
+    /* Ensure accordion elements are clickable */
+    .accordion {
+      position: relative;
+      z-index: 100;
+    }
+    
+    .accordion-item {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(0,255,255,0.3);
+      border-radius: 12px;
+      margin-bottom: 15px;
+      backdrop-filter: blur(8px);
+    }
+    
+    .accordion-button {
+      background: rgba(0,255,255,0.1);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px !important;
+      font-weight: 600;
+      position: relative;
+      z-index: 101;
+    }
+    
+    .accordion-button:not(.collapsed) {
+      background: rgba(0,255,255,0.2);
+      color: #00ffff;
+      text-shadow: 0 0 8px rgba(0,255,255,0.5);
+    }
+    
+    .accordion-button:focus {
+      box-shadow: 0 0 15px rgba(0,255,255,0.5);
+      border-color: rgba(0,255,255,0.6);
+    }
+    
+    .accordion-body {
+      background: rgba(0,0,0,0.3);
+      color: #ffffff;
+      border-top: 1px solid rgba(0,255,255,0.2);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.6; }
+      25% { transform: translateY(-30px) translateX(20px); opacity: 1; }
+      50% { transform: translateY(-15px) translateX(-25px); opacity: 0.8; }
+      75% { transform: translateY(-40px) translateX(15px); opacity: 1; }
+    }
+    footer {
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(0,255,255,0.3);
+      color: white;
+      padding: 30px 0;
+      text-align: center;
+      margin-top: 60px;
+      position: relative;
+      z-index: 10;
+    }
+    @media (max-width: 768px) {
+      .futuristic-card { padding: 1.2rem 0.7rem; }
+    }
+  </style>
+  <!-- Add floating particles -->
+  <div class="floating-particle" style="top: 15%; left: 10%; animation-delay: 0s;"></div>
+  <div class="floating-particle" style="top: 60%; left: 85%; animation-delay: 1s;"></div>
+  <div class="floating-particle" style="top: 30%; left: 70%; animation-delay: 2s;"></div>
+  <div class="floating-particle" style="top: 80%; left: 20%; animation-delay: 3s;"></div>
+  <div class="floating-particle" style="top: 45%; left: 5%; animation-delay: 4s;"></div>
+  <div class="floating-particle" style="top: 75%; left: 90%; animation-delay: 5s;"></div>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html"> 
+        <img src="https://miro.medium.com/v2/resize:fit:2000/1*DPNoWJ3Au35Fw58Sn2oj1w.png" alt="Logo" width="40" height="40" class="rounded-circle me-2">
+        FaceRecSys
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          {% if session.get('user') %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('student') }}">Students</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('attendance') }}">Attendance</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('setting') }}">Settings</a></li>
+            <li class="nav-item"><a class="nav-link active" href="{{ url_for('help_page') }}">Help</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('why_choose') }}">Why Choose Us</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Our Services</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact Us</a></li>
+            <li class="nav-item"><a class="nav-link active" href="{{ url_for('help_page') }}">Help</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Banner -->
+  <div class="help-banner">
+    <h1>Need Help?</h1>
+  </div>
+
+  <!-- Help Section -->
+  <div class="container my-5">
+    <div class="futuristic-card">
+      <div class="text-center mb-5">
+        <h2>Frequently Asked Questions</h2>
+        <p>Find answers to the most common questions below.</p>
+      </div>
+
+      <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+              How do I register a new student in the system?
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Go to the <strong>Admin Dashboard</strong> and click on "Add Student". Fill in the student's details and upload their facial image.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+              What technology is used for face recognition?
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              We use <strong>OpenCV</strong> for image processing and <strong>Dlib</strong> with facial embeddings for accurate face recognition.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+              How do I export attendance records?
+            </button>
+          </h2>
+          <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Navigate to the Attendance section in the dashboard and click on "Export to Excel" to download a report.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingFour">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+              Is the system secure?
+            </button>
+          </h2>
+          <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes. We implement secure protocols and data handling practices. Facial data is encrypted and never shared.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 FaceRecSys | AI-Powered Attendance for Smart Institutions</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Face Recognition System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+
+    .hero {
+      position: relative;
+      height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+      overflow: hidden;
+    }
+
+    .hero video.bg-video {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+      z-index: 1;
+      filter: brightness(0.4);
+    }
+
+    .hero .hero-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+
+    .feature-icon {
+      font-size: 40px;
+      color: #0f3978;
+      margin-bottom: 10px;
+    }
+
+    .use-case {
+      background-color: #f8f9fa;
+      padding: 40px 0;
+    }
+
+    .cta-section {
+      background-color: #133d7d;
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    footer {
+      background-color: #212529;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    /* Futuristic Cards Section */
+    .futuristic-cards-section {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .futuristic-cards-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23ffffff" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      animation: networkMove 20s linear infinite;
+    }
+
+    @keyframes networkMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-10px, -10px); }
+    }
+
+    .futuristic-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .futuristic-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: rgba(0, 255, 255, 0.6);
+      box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+    }
+
+    .card-glow {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .futuristic-card:hover .card-glow {
+      opacity: 1;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.1; }
+      50% { transform: scale(1.1); opacity: 0.2; }
+    }
+
+    .network-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><pattern id="circuit" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="2" fill="%2300ffff" opacity="0.3"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite"/></circle><line x1="20" y1="0" x2="20" y2="40" stroke="%2300ffff" stroke-width="0.5" opacity="0.2"/><line x1="0" y1="20" x2="40" y2="20" stroke="%2300ffff" stroke-width="0.5" opacity="0.2"/></pattern></defs><rect width="200" height="200" fill="url(%23circuit)"/></svg>');
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .futuristic-card:hover .network-bg {
+      opacity: 1;
+      animation: circuitFlow 4s linear infinite;
+    }
+
+    @keyframes circuitFlow {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-40px, -40px); }
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: white;
+    }
+
+    .tech-icon {
+      font-size: 3rem;
+      color: #00ffff;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      animation: iconGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes iconGlow {
+      0% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+      100% { text-shadow: 0 0 30px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.3); }
+    }
+
+    .card-title {
+      color: #ffffff;
+      font-weight: 600;
+      margin-bottom: 15px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-text {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ffff, #0080ff);
+      border-radius: 3px;
+      width: 0;
+      transition: width 2s ease-in-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: progressShine 2s infinite;
+    }
+
+    @keyframes progressShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .accuracy-text {
+      color: #00ffff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+
+    /* 3D Tilt Effect */
+    .futuristic-card[data-tilt] {
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    /* About Us Section */
+    .about-us-section {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-us-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><defs><pattern id="hexagon" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 52,15 52,37 30,50 8,37 8,15" fill="none" stroke="%23ffffff" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="60" height="60" fill="url(%23hexagon)"/></svg>');
+      animation: hexagonMove 25s linear infinite;
+    }
+
+    @keyframes hexagonMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-60px, -52px); }
+    }
+
+    .team-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 25px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(15px);
+      height: 100%;
+      transform: translateY(0);
+    }
+
+    .team-card:hover {
+      transform: translateY(-15px);
+      border-color: rgba(0, 255, 255, 0.5);
+      box-shadow: 0 25px 50px rgba(0, 255, 255, 0.15);
+    }
+
+    .card-hologram {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .team-card:hover .card-hologram {
+      opacity: 1;
+      animation: hologram 3s infinite;
+    }
+
+    @keyframes hologram {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.05; }
+      50% { transform: scale(1.1) rotate(180deg); opacity: 0.1; }
+    }
+
+    .profile-container {
+      position: relative;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .profile-image-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .profile-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(0, 255, 255, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .team-card:hover .profile-image {
+      border-color: rgba(0, 255, 255, 0.8);
+      transform: scale(1.05);
+    }
+
+    .image-glow {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.3) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .team-card:hover .image-glow {
+      opacity: 1;
+      animation: profileGlow 2s infinite alternate;
+    }
+
+    @keyframes profileGlow {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.1); }
+    }
+
+    .neural-pattern {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 150px;
+      height: 150px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%2300ffff" opacity="0.3"><animate attributeName="r" values="2;4;2" dur="2s" repeatCount="indefinite"/></circle><circle cx="25" cy="25" r="1" fill="%2300ffff" opacity="0.2"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="3s" repeatCount="indefinite"/></circle><circle cx="75" cy="25" r="1" fill="%2300ffff" opacity="0.2"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="2.5s" repeatCount="indefinite"/></circle><circle cx="25" cy="75" r="1" fill="%2300ffff" opacity="0.2"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="3.5s" repeatCount="indefinite"/></circle><circle cx="75" cy="75" r="1" fill="%2300ffff" opacity="0.2"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="2.8s" repeatCount="indefinite"/></circle><line x1="50" y1="50" x2="25" y2="25" stroke="%2300ffff" stroke-width="0.5" opacity="0.2"/><line x1="50" y1="50" x2="75" y2="25" stroke="%2300ffff" stroke-width="0.5" opacity="0.2"/><line x1="50" y1="50" x2="25" y2="75" stroke="%2300ffff" stroke-width="0.5" opacity="0.2"/><line x1="50" y1="50" x2="75" y2="75" stroke="%2300ffff" stroke-width="0.5" opacity="0.2"/></svg>');
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .team-card:hover .neural-pattern {
+      opacity: 1;
+      animation: neuralPulse 4s linear infinite;
+    }
+
+    @keyframes neuralPulse {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .team-info {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .team-name {
+      color: #ffffff;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 1.3rem;
+    }
+
+    .team-role {
+      color: #00ffff;
+      font-weight: 600;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .team-bio {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .expertise-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .tag {
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      color: #00ffff;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .tag:hover {
+      background: rgba(0, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Help Box & Location Section */
+    .help-location-section {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      position: relative;
+    }
+
+    .help-box, .location-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 25px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(15px);
+      height: 100%;
+    }
+
+    .help-glow, .location-glow {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .help-box:hover .help-glow, .location-box:hover .location-glow {
+      opacity: 1;
+      animation: helpGlow 3s infinite;
+    }
+
+    @keyframes helpGlow {
+      0%, 100% { transform: scale(1); opacity: 0.05; }
+      50% { transform: scale(1.1); opacity: 0.1; }
+    }
+
+    .help-header, .location-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .help-icon, .location-icon {
+      font-size: 3rem;
+      color: #00ffff;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      margin-bottom: 15px;
+    }
+
+    .help-header h3, .location-header h3 {
+      color: #ffffff;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .help-header p, .location-header p {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .help-form {
+      position: relative;
+      z-index: 2;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      color: #00ffff;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      font-size: 0.9rem;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: rgba(0, 255, 255, 0.6);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .form-group input::placeholder, .form-group textarea::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .help-submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(45deg, #00ffff, #0080ff);
+      border: none;
+      border-radius: 12px;
+      color: #000;
+      font-weight: 700;
+      font-size: 1rem;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .help-submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
+    }
+
+    .btn-glow {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .help-submit-btn:hover .btn-glow {
+      left: 100%;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 30px;
+      background: rgba(0, 255, 0, 0.1);
+      border: 1px solid rgba(0, 255, 0, 0.3);
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+
+    .success-icon {
+      font-size: 3rem;
+      color: #00ff00;
+      margin-bottom: 15px;
+    }
+
+    .success-message h4 {
+      color: #00ff00;
+      margin-bottom: 10px;
+    }
+
+    .success-message p {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .address-info {
+      margin-bottom: 30px;
+    }
+
+    .address-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .address-item i {
+      color: #00ffff;
+      font-size: 1.2rem;
+      margin-right: 15px;
+      margin-top: 3px;
+    }
+
+    .address-item strong {
+      color: #ffffff;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .map-container {
+      position: relative;
+      border-radius: 15px;
+      overflow: hidden;
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .map-container:hover {
+      border-color: rgba(0, 255, 255, 0.6);
+      box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+    }
+
+    .map-overlay {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 10;
+      background: rgba(0, 255, 255, 0.9);
+      padding: 8px;
+      border-radius: 50%;
+      animation: mapPing 2s infinite;
+    }
+
+    @keyframes mapPing {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .map-pin i {
+      color: #000;
+      font-size: 1.2rem;
+    }
+
+    /* Futuristic Button Styles */
+    .btn-futuristic {
+      display: inline-block;
+      position: relative;
+      background: linear-gradient(45deg, #00ffff, #0080ff, #00ffff);
+      border: none;
+      border-radius: 25px;
+      padding: 15px 40px;
+      color: #000;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 255, 255, 0.3);
+      background-size: 300% 300%;
+      animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .btn-futuristic:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 255, 255, 0.5);
+      color: #000;
+      text-decoration: none;
+    }
+
+    .btn-futuristic::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-futuristic:hover::before {
+      left: 100%;
+    }
+
+    .btn-text {
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.3), transparent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+      z-index: 1;
+    }
+
+    .btn-futuristic:hover .btn-glow {
+      width: 200%;
+      height: 200%;
+    }
+
+    /* Futuristic Core Features */
+    .core-features-section {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      position: relative;
+      padding: 80px 0;
+      overflow: hidden;
+    }
+
+    .core-features-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="tech-grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%2300ffff" opacity="0.2"><animate attributeName="opacity" values="0.1;0.4;0.1" dur="2s" repeatCount="indefinite"/></circle><line x1="10" y1="0" x2="10" y2="20" stroke="%2300ffff" stroke-width="0.3" opacity="0.1"/><line x1="0" y1="10" x2="20" y2="10" stroke="%2300ffff" stroke-width="0.3" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23tech-grid)"/></svg>');
+      animation: techGridMove 20s linear infinite;
+    }
+
+    @keyframes techGridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-20px, -20px); }
+    }
+
+    .core-features-section h2 {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 60px;
+      text-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .core-features-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #00ffff, transparent);
+      border-radius: 2px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+      animation: pulse 2s infinite;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(0, 255, 255, 0.6);
+      box-shadow: 0 25px 50px rgba(0, 255, 255, 0.2);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      color: #00ffff;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .feature-card h5 {
+      color: #ffffff;
+      font-weight: 600;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .feature-card p {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Who Can Use Section */
+    .use-case-section {
+      background: linear-gradient(135deg, #16213e 0%, #1a1a2e 50%, #0f0f23 100%);
+      position: relative;
+      padding: 80px 0;
+      overflow: hidden;
+    }
+
+    .use-case-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><defs><pattern id="use-hexagon" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 52,15 52,37 30,50 8,37 8,15" fill="none" stroke="%23ffffff" stroke-width="0.5" opacity="0.08"/><circle cx="30" cy="26" r="2" fill="%2300ffff" opacity="0.3"><animate attributeName="opacity" values="0.1;0.6;0.1" dur="4s" repeatCount="indefinite"/></circle></pattern></defs><rect width="60" height="60" fill="url(%23use-hexagon)"/></svg>');
+      animation: useHexagonMove 30s linear infinite;
+    }
+
+    @keyframes useHexagonMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-60px, -52px); }
+    }
+
+    .use-case-section h2 {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 60px;
+      text-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .use-case-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #00ffff, transparent);
+      border-radius: 2px;
+    }
+
+    .use-case-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+      height: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .use-case-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.03) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .use-case-card:hover::before {
+      opacity: 1;
+      animation: pulse 2s infinite;
+    }
+
+    .use-case-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0, 255, 255, 0.5);
+      box-shadow: 0 20px 40px rgba(0, 255, 255, 0.15);
+    }
+
+    .use-case-card h5 {
+      color: #00ffff;
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .use-case-card p {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      position: relative;
+      z-index: 2;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+      <img src="https://miro.medium.com/v2/resize:fit:2000/1*DPNoWJ3Au35Fw58Sn2oj1w.png" alt="Logo" width="40" height="40" class="rounded-circle me-2">
+      FaceRecSys
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="{{ url_for('index') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('why_choose') }}">Why Choose Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Our Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('help_page') }}">Help</a></li>
+        {% if session.get('user') %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <video class="bg-video" autoplay loop muted playsinline>
+    <source src="static/8090418-uhd_4096_2160_25fps.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div class="hero-content">
+    <h1 class="display-4 fw-bold">Face Recognition Attendance System</h1>
+    <p class="lead">AI-Powered | Secure | Contactless | Efficient</p>
+    <a href="{{ url_for('services') }}" class="btn-futuristic btn-lg mt-3">
+      <span class="btn-text">Explore Our Services</span>
+      <div class="btn-glow"></div>
+    </a>
+  </div>
+</section>
+
+<!-- Core Features -->
+<section class="core-features-section">
+  <div class="container">
+    <h2>Core Features</h2>
+    <div class="row">
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-camera-video-fill"></i></div>
+          <h5>Real-Time Detection</h5>
+          <p>Uses advanced OpenCV and Dlib to detect and recognize faces instantly with quantum-enhanced algorithms.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-calendar-check-fill"></i></div>
+          <h5>Auto Attendance</h5>
+          <p>Logs attendance automatically and exports data to Excel or CSV formats with blockchain verification.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-speedometer2"></i></div>
+          <h5>Admin Dashboard</h5>
+          <p>Manage users, view logs, and configure system settings with AI-powered analytics and insights.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Use Cases -->
+<section class="use-case-section">
+  <div class="container">
+    <h2>Who Can Use It?</h2>
+    <div class="row">
+      <div class="col-lg-4 col-md-6">
+        <div class="use-case-card">
+          <h5>Educational Institutions</h5>
+          <p>Track student attendance in schools, colleges, and universities with advanced AI recognition and automated reporting systems.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="use-case-card">
+          <h5>Corporate Offices</h5>
+          <p>Monitor employee attendance in real-time with audit-ready reports and seamless integration with HR systems.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="use-case-card">
+          <h5>Secure Facilities</h5>
+          <p>Enhance access control for research labs, data centers, and government sites with military-grade security protocols.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Futuristic Interactive Cards Section -->
+<section class="futuristic-cards-section py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold text-white mb-3">Advanced AI Technology</h2>
+      <p class="lead text-light">Experience the power of cutting-edge artificial intelligence</p>
+    </div>
+    
+    <div class="row g-4">
+      <!-- Card 1: AI Recognition -->
+      <div class="col-md-4">
+        <div class="futuristic-card" data-tilt>
+          <div class="card-glow"></div>
+          <div class="network-bg"></div>
+          <div class="card-content">
+            <div class="tech-icon mb-3">
+              <i class="bi bi-robot"></i>
+            </div>
+            <h4 class="card-title">Neural Networks</h4>
+            <p class="card-text">Advanced deep learning algorithms that continuously improve recognition accuracy through machine learning.</p>
+            <div class="progress-bar">
+              <div class="progress-fill" data-progress="95"></div>
+            </div>
+            <span class="accuracy-text">95% Accuracy</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card 2: Real-time Processing -->
+      <div class="col-md-4">
+        <div class="futuristic-card" data-tilt>
+          <div class="card-glow"></div>
+          <div class="network-bg"></div>
+          <div class="card-content">
+            <div class="tech-icon mb-3">
+              <i class="bi bi-lightning-charge"></i>
+            </div>
+            <h4 class="card-title">Quantum Speed</h4>
+            <p class="card-text">Lightning-fast processing with sub-second recognition powered by optimized computer vision algorithms.</p>
+            <div class="progress-bar">
+              <div class="progress-fill" data-progress="98"></div>
+            </div>
+            <span class="accuracy-text">0.2s Response</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card 3: Security -->
+      <div class="col-md-4">
+        <div class="futuristic-card" data-tilt>
+          <div class="card-glow"></div>
+          <div class="network-bg"></div>
+          <div class="card-content">
+            <div class="tech-icon mb-3">
+              <i class="bi bi-shield-lock"></i>
+            </div>
+            <h4 class="card-title">Encrypted Security</h4>
+            <p class="card-text">Military-grade encryption ensures your biometric data remains completely secure and private.</p>
+            <div class="progress-bar">
+              <div class="progress-fill" data-progress="100"></div>
+            </div>
+            <span class="accuracy-text">Bank-Level Security</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Us Section -->
+<section class="about-us-section py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold text-white mb-3">Meet Our AI Pioneers</h2>
+      <p class="lead text-light">The brilliant minds behind the future of attendance technology</p>
+    </div>
+    
+    <div class="row g-4">
+      <!-- Team Member 1 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="team-card" data-aos="fade-up">
+          <div class="card-hologram"></div>
+          <div class="profile-container">
+            <div class="profile-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face" alt="Dr. Alex Chen" class="profile-image">
+              <div class="image-glow"></div>
+            </div>
+            <div class="neural-pattern"></div>
+          </div>
+          <div class="team-info">
+            <h4 class="team-name">Dr. Alex Chen</h4>
+            <p class="team-role">Chief AI Architect</p>
+            <p class="team-bio">Former MIT researcher with 15+ years in computer vision. Pioneered quantum-enhanced facial recognition algorithms. PhD in Neural Networks from Stanford. Published 50+ papers on deep learning.</p>
+            <div class="expertise-tags">
+              <span class="tag">Deep Learning</span>
+              <span class="tag">Computer Vision</span>
+              <span class="tag">Quantum AI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Team Member 2 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="team-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="card-hologram"></div>
+          <div class="profile-container">
+            <div class="profile-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&h=300&fit=crop&crop=face" alt="Sarah Rodriguez" class="profile-image">
+              <div class="image-glow"></div>
+            </div>
+            <div class="neural-pattern"></div>
+          </div>
+          <div class="team-info">
+            <h4 class="team-name">Sarah Rodriguez</h4>
+            <p class="team-role">Security & Privacy Director</p>
+            <p class="team-bio">Cybersecurity expert from Google. Led blockchain integration for biometric data protection. Masters in Cryptography from Berkeley. Specializes in zero-knowledge proof systems for privacy.</p>
+            <div class="expertise-tags">
+              <span class="tag">Blockchain</span>
+              <span class="tag">Cryptography</span>
+              <span class="tag">Privacy Tech</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Team Member 3 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="team-card" data-aos="fade-up" data-aos-delay="400">
+          <div class="card-hologram"></div>
+          <div class="profile-container">
+            <div class="profile-image-wrapper">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face" alt="Marcus Thompson" class="profile-image">
+              <div class="image-glow"></div>
+            </div>
+            <div class="neural-pattern"></div>
+          </div>
+          <div class="team-info">
+            <h4 class="team-name">Marcus Thompson</h4>
+            <p class="team-role">Edge Computing Engineer</p>
+            <p class="team-bio">Ex-Tesla Autopilot engineer. Optimized real-time AI for edge devices. MS in Robotics from CMU. Reduced processing latency by 90% using custom silicon and parallel computing architectures.</p>
+            <div class="expertise-tags">
+              <span class="tag">Edge AI</span>
+              <span class="tag">Real-time Systems</span>
+              <span class="tag">Hardware Optimization</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Help Box & Location Section -->
+<section class="help-location-section py-5">
+  <div class="container">
+    <div class="row g-5">
+      <!-- Help Box -->
+      <div class="col-lg-6">
+        <div class="help-box" data-aos="fade-right">
+          <div class="help-glow"></div>
+          <div class="help-content">
+            <div class="help-header">
+              <div class="help-icon">
+                <i class="bi bi-headset"></i>
+              </div>
+              <h3>Need Assistance?</h3>
+              <p>Our AI support team is ready to help you 24/7</p>
+            </div>
+            
+            <form class="help-form" id="helpForm">
+              <div class="form-group">
+                <label for="helpName">Your Name</label>
+                <input type="text" id="helpName" name="name" placeholder="Enter your full name" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="helpEmail">Email Address</label>
+                <input type="email" id="helpEmail" name="email" placeholder="your.email@company.com" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="helpCategory">Category</label>
+                <select id="helpCategory" name="category" required>
+                  <option value="">Select category</option>
+                  <option value="technical">Technical Support</option>
+                  <option value="integration">System Integration</option>
+                  <option value="pricing">Pricing & Plans</option>
+                  <option value="demo">Request Demo</option>
+                  <option value="other">Other Questions</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="helpMessage">Your Message</label>
+                <textarea id="helpMessage" name="message" rows="4" placeholder="Describe how we can help you..." required></textarea>
+              </div>
+              
+              <button type="submit" class="help-submit-btn">
+                <span class="btn-text">Send Message</span>
+                <div class="btn-glow"></div>
+              </button>
+            </form>
+            
+            <div class="success-message" id="successMessage" style="display: none;">
+              <div class="success-icon">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <h4>Message Sent Successfully!</h4>
+              <p>Our AI team will review your request and respond within 2 hours. Thank you for choosing FaceRecSys!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Location & Map -->
+      <div class="col-lg-6">
+        <div class="location-box" data-aos="fade-left">
+          <div class="location-glow"></div>
+          <div class="location-content">
+            <div class="location-header">
+              <div class="location-icon">
+                <i class="bi bi-geo-alt"></i>
+              </div>
+              <h3>Visit Our AI Lab</h3>
+              <p>Experience the future of attendance technology</p>
+            </div>
+            
+            <div class="address-info">
+              <div class="address-item">
+                <i class="bi bi-building"></i>
+                <div>
+                  <strong>FaceRecSys Headquarters</strong>
+                  <p>Tech Hub Tower, Sector V<br>Salt Lake City, Newtown<br>Kolkata, West Bengal 700091</p>
+                </div>
+              </div>
+              
+              <div class="address-item">
+                <i class="bi bi-telephone"></i>
+                <div>
+                  <strong>Contact</strong>
+                  <p>+91 98765 43210<br>support@faceracsys.ai</p>
+                </div>
+              </div>
+              
+              <div class="address-item">
+                <i class="bi bi-clock"></i>
+                <div>
+                  <strong>Office Hours</strong>
+                  <p>Mon-Fri: 9:00 AM - 6:00 PM<br>Sat: 10:00 AM - 4:00 PM</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Google Map -->
+            <div class="map-container">
+              <div class="map-overlay">
+                <div class="map-pin">
+                  <i class="bi bi-geo-alt-fill"></i>
+                </div>
+              </div>
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.0955842856843!2d88.43067631536654!3d22.572645885174253!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02738f85b5e4d5%3A0x2bcb4902b1b5d6b!2sNewtown%2C%20Kolkata%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1688374521123!5m2!1sen!2sin"
+                width="100%" 
+                height="250" 
+                style="border:0; border-radius: 15px;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="mb-3">Ready to Get Started?</h2>
+  <p class="lead mb-4">Join the future of smart attendance with our AI-based face recognition system.</p>
+  <a href="{{ url_for('contact') }}" class="btn btn-light btn-lg">Contact Us</a>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2025 FaceRecSys | AI-Powered Attendance for Smart Institutions</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Futuristic Cards Interactive Effects
+document.addEventListener('DOMContentLoaded', function() {
+    // Progress bar animation
+    const progressBars = document.querySelectorAll('.progress-fill');
+    
+    const animateProgressBars = () => {
+        progressBars.forEach(bar => {
+            const progress = bar.getAttribute('data-progress');
+            setTimeout(() => {
+                bar.style.width = progress + '%';
+            }, 500);
+        });
+    };
+
+    // Intersection Observer for progress bars
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateProgressBars();
+            }
+        });
+    }, { threshold: 0.5 });
+
+    const cardsSection = document.querySelector('.futuristic-cards-section');
+    if (cardsSection) {
+        observer.observe(cardsSection);
+    }
+
+    // 3D Tilt Effect for Cards
+    const cards = document.querySelectorAll('[data-tilt]');
+    
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+        });
+    });
+
+    // Random floating animation for network nodes
+    const addFloatingNodes = () => {
+        const cardsSection = document.querySelector('.futuristic-cards-section');
+        if (!cardsSection) return;
+
+        for (let i = 0; i < 5; i++) {
+            const node = document.createElement('div');
+            node.className = 'floating-node';
+            node.style.cssText = `
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: #00ffff;
+                border-radius: 50%;
+                box-shadow: 0 0 10px #00ffff;
+                left: ${Math.random() * 100}%;
+                top: ${Math.random() * 100}%;
+                animation: float ${3 + Math.random() * 4}s ease-in-out infinite;
+                z-index: 1;
+            `;
+            cardsSection.appendChild(node);
+        }
+    };
+
+    // Add floating nodes
+    addFloatingNodes();
+
+    // Add floating animation keyframes
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.7; }
+            25% { transform: translateY(-20px) translateX(10px); opacity: 1; }
+            50% { transform: translateY(-10px) translateX(-15px); opacity: 0.8; }
+            75% { transform: translateY(-25px) translateX(5px); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Help Form Functionality
+    const helpForm = document.getElementById('helpForm');
+    const successMessage = document.getElementById('successMessage');
+
+    if (helpForm) {
+        helpForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(helpForm);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const category = formData.get('category');
+            const message = formData.get('message');
+            
+            // Validate form
+            if (!name || !email || !category || !message) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Simulate form submission with loading effect
+            const submitBtn = helpForm.querySelector('.help-submit-btn');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <div style="border: 2px solid #000; border-top: 2px solid transparent; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; margin-right: 10px;"></div>
+                    Processing...
+                </div>
+            `;
+            
+            // Add spin animation
+            const spinStyle = document.createElement('style');
+            spinStyle.textContent = `
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(spinStyle);
+            
+            submitBtn.disabled = true;
+            
+            // Simulate processing time
+            setTimeout(() => {
+                // Hide form and show success message
+                helpForm.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Add success animation
+                successMessage.style.opacity = '0';
+                successMessage.style.transform = 'translateY(20px)';
+                successMessage.style.transition = 'all 0.5s ease';
+                
+                setTimeout(() => {
+                    successMessage.style.opacity = '1';
+                    successMessage.style.transform = 'translateY(0)';
+                }, 100);
+                
+                // Reset form after 5 seconds
+                setTimeout(() => {
+                    helpForm.style.display = 'block';
+                    successMessage.style.display = 'none';
+                    helpForm.reset();
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 5000);
+                
+            }, 2000); // 2 second fake processing time
+        });
+    }
+
+    // Simple AOS (Animate On Scroll) implementation
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const animateObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                const delay = element.getAttribute('data-aos-delay') || 0;
+                
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, delay);
+            }
+        });
+    }, observerOptions);
+
+    // Initialize AOS elements
+    const aosElements = document.querySelectorAll('[data-aos]');
+    aosElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(50px)';
+        el.style.transition = 'all 0.6s ease';
+        animateObserver.observe(el);
+    });
+
+    // Simple video autoplay
+    const heroVideo = document.querySelector('.bg-video');
+    if (heroVideo) {
+        // Set basic properties
+        heroVideo.muted = true;
+        heroVideo.loop = true;
+        
+        // Simple autoplay attempt
+        heroVideo.play().catch(() => {
+            // If autoplay fails, try again on user interaction
+            document.addEventListener('click', () => {
+                heroVideo.play();
+            }, { once: true });
+        });
+    }
+});
+</script>
+</body>
+</html>

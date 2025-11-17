@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Real-Time Face Detection - FaceRecSys</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  {% if not session.get('user') %}
+    <script>
+      window.location.href = "{{ url_for('login') }}";
+    </script>
+  {% endif %}
+  <style>
+    .feature-banner {
+      background: url('https://cdn.easternpeak.com/wp-content/uploads/2022/11/Exploring-Facial-Recognition-Use-Cases.jpg') no-repeat center center/cover;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 2px 2px 8px #000;
+    }
+    .feature-banner h1 {
+      font-size: 3rem;
+    }
+    .feature-section {
+      padding: 60px 0;
+    }
+    .feature-section img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    footer {
+      background-color: #212529;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+        <img src="https://miro.medium.com/v2/resize:fit:2000/1*DPNoWJ3Au35Fw58Sn2oj1w.png" alt="Logo" width="40" height="40" class="rounded-circle me-2"> FaceRecSys
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        {% if session.get('user') %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('student') }}">Students</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('attendance') }}">Attendance</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{{ url_for('realtime') }}">Real-Time</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('setting') }}">Settings</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('help_page') }}">Help</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('why_choose') }}">Why Choose Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Our Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('help_page') }}">Help</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Feature Banner -->
+  <div class="feature-banner text-center">
+    <h1>Real‑Time Face Detection</h1>
+  </div>
+
+  <!-- Feature Details -->
+  <div class="container feature-section">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h2>Live Face Recognition</h2>
+        <p>
+          Our powerful OpenCV + Dlib engine captures faces from live camera feeds and recognizes registered users instantly. Ideal for seamless check-in and real-time monitoring.
+        </p>
+        <ul>
+          <li>High accuracy face detection</li>
+          <li>Live embedding comparison</li>
+          <li>Fast performance optimized for low latency</li>
+        </ul>
+        <!-- Webcam Section -->
+        <div class="mb-4">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Live Camera Feed</h5>
+              <video id="video" width="320" height="240" autoplay class="border rounded"></video>
+            </div>
+            <div class="col-md-6">
+              <h5>AI Detection Output</h5>
+              <canvas id="outputCanvas" width="320" height="240" class="border rounded" style="background-color: #f8f9fa;"></canvas>
+            </div>
+          </div>
+          <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+          <div class="mt-2">
+            <button id="startCamera" class="btn btn-primary me-2">Start Camera</button>
+            <button id="stopCamera" class="btn btn-secondary me-2">Stop Camera</button>
+            <button id="capture" class="btn btn-success me-2">Scan & Submit</button>
+            <button id="testServer" class="btn btn-warning">Test Server</button>
+          </div>
+          <div id="frameInfo" class="mt-2 text-muted"></div>
+          <div id="result" class="mt-3"></div>
+        </div>
+        <a href="{{ url_for('services') }}" class="btn btn-primary mt-3">Back to Services ↩️</a>
+      </div>
+      <div class="col-md-6">
+        <img src="https://offload.media.kychub.com/wp-content/uploads/2023/09/07103829/face-liveness-detection.jpg" alt="Live Detection Screenshot">
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 FaceRecSys | AI-Powered Attendance for Smart Institutions</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Access webcam
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const outputCanvas = document.getElementById('outputCanvas');
+    const captureBtn = document.getElementById('capture');
+    const startBtn = document.getElementById('startCamera');
+    const stopBtn = document.getElementById('stopCamera');
+    const testBtn = document.getElementById('testServer');
+    const resultDiv = document.getElementById('result');
+    const frameInfoDiv = document.getElementById('frameInfo');
+    
+    let currentStream = null;
+    let detectionInterval = null;
+    const outputCtx = outputCanvas.getContext('2d');
+
+    // Function to start camera
+    function startCamera() {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(function(stream) {
+            currentStream = stream;
+            video.srcObject = stream;
+            video.play();
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            captureBtn.disabled = false;
+            frameInfoDiv.innerHTML = "Camera started. Ready to capture frames.";
+            
+            // Start continuous face detection
+            startFaceDetection();
+          })
+          .catch(function(err) {
+            frameInfoDiv.innerHTML = `<span class="text-danger">Camera access denied: ${err.message}</span>`;
+          });
+      } else {
+        frameInfoDiv.innerHTML = `<span class="text-danger">Camera not supported by this browser.</span>`;
+      }
+    }
+
+    // Function to stop camera
+    function stopCamera() {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+        currentStream = null;
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        captureBtn.disabled = true;
+        frameInfoDiv.innerHTML = "Camera stopped.";
+        resultDiv.innerHTML = "";
+        
+        // Stop face detection and clear output canvas
+        if (detectionInterval) {
+          clearInterval(detectionInterval);
+          detectionInterval = null;
+        }
+        outputCtx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
+      }
+    }
+
+    // Start continuous face detection
+    function startFaceDetection() {
+      if (detectionInterval) {
+        clearInterval(detectionInterval);
+      }
+      
+      detectionInterval = setInterval(() => {
+        if (video.readyState === video.HAVE_ENOUGH_DATA && currentStream) {
+          detectFacesInFrame();
+        }
+      }, 500); // Check every 500ms
+    }
+
+    // Detect faces in current frame
+    function detectFacesInFrame() {
+      const detectionCanvas = document.createElement('canvas');
+      detectionCanvas.width = video.videoWidth;
+      detectionCanvas.height = video.videoHeight;
+      const detectionCtx = detectionCanvas.getContext('2d');
+      detectionCtx.drawImage(video, 0, 0, detectionCanvas.width, detectionCanvas.height);
+      const dataURL = detectionCanvas.toDataURL('image/png');
+
+      fetch('/detect_face', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: dataURL })
+      })
+      .then(res => res.json())
+      .then(data => {
+        // Draw video frame to output canvas
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+          outputCtx.drawImage(video, 0, 0, outputCanvas.width, outputCanvas.height);
+          
+          // Draw face detection boxes
+          if (data.faces && data.faces.length > 0) {
+            drawFaceBoxes(data.faces);
+          }
+        }
+      })
+      .catch(err => {
+        console.error('Face detection error:', err);
+      });
+    }
+
+    // Draw face detection boxes on output canvas
+    function drawFaceBoxes(faces) {
+      faces.forEach(face => {
+        const x = face.x;
+        const y = face.y;
+        const w = face.width;
+        const h = face.height;
+        
+        // Draw face rectangle
+        outputCtx.strokeStyle = face.status === 'registered' ? '#28a745' : '#ffc107';
+        outputCtx.lineWidth = 3;
+        outputCtx.strokeRect(x, y, w, h);
+        
+        // Draw label background and text
+        const text = face.display_name;
+        outputCtx.font = '14px Arial';
+        const textWidth = outputCtx.measureText(text).width;
+        const textPadding = 8;
+        
+        // Background for text
+        outputCtx.fillStyle = face.status === 'registered' ? 'rgba(40, 167, 69, 0.8)' : 'rgba(255, 193, 7, 0.8)';
+        outputCtx.fillRect(x, y - 30, textWidth + textPadding * 2, 25);
+        
+        // Text
+        outputCtx.fillStyle = 'white';
+        outputCtx.fillText(text, x + textPadding, y - 10);
+      });
+    }
+
+    // Initialize camera on page load
+    startCamera();
+
+    // Button event listeners
+    startBtn.onclick = startCamera;
+    stopBtn.onclick = stopCamera;
+
+    // Test server button
+    testBtn.onclick = function() {
+      resultDiv.innerHTML = "Testing server connection...";
+      frameInfoDiv.innerHTML = "Checking if server responds correctly...";
+      
+      fetch('/test_response')
+        .then(response => response.json())
+        .then(data => {
+          console.log('Test response:', data);
+          resultDiv.innerHTML = `<div class="alert alert-info">${data.recognized.join(', ')}</div>`;
+          frameInfoDiv.innerHTML = `<strong>Server test completed</strong> - Connection working`;
+        })
+        .catch(err => {
+          console.error('Test failed:', err);
+          resultDiv.innerHTML = `<div class="alert alert-danger">Server test failed: ${err.message}</div>`;
+          frameInfoDiv.innerHTML = `<strong>Server test failed</strong> - Check connection`;
+        });
+    };
+
+    captureBtn.onclick = function() {
+      if (!currentStream) {
+        resultDiv.innerHTML = `<span class="text-danger">Camera not started. Please start camera first.</span>`;
+        return;
+      }
+
+      // Capture frame
+      const context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataURL = canvas.toDataURL('image/jpeg');
+      
+      // Show frame information
+      const timestamp = new Date().toLocaleTimeString();
+      frameInfoDiv.innerHTML = `<strong>Frame captured at ${timestamp}</strong> - Size: ${canvas.width}x${canvas.height}px - Processing...`;
+      resultDiv.innerHTML = "Analyzing frame for face recognition...";
+
+      fetch('/recognize', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache'
+        },
+        body: JSON.stringify({ image: dataURL })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Server response:', data); // Debug log
+        const timestamp = new Date().toLocaleTimeString();
+        if (data.success && data.recognized && data.message) {
+          console.log('Recognition message:', data.message); // Debug log
+          resultDiv.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+          frameInfoDiv.innerHTML = `<strong>Frame processed at ${timestamp}</strong> - Face recognition successful`;
+        } else if (data.error) {
+          resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${data.error}</div>`;
+          frameInfoDiv.innerHTML = `<strong>Frame processed at ${timestamp}</strong> - Recognition failed: ${data.error}`;
+        } else {
+          resultDiv.innerHTML = `<div class="alert alert-warning">Face not recognized. Please try again.</div>`;
+          frameInfoDiv.innerHTML = `<strong>Frame processed at ${timestamp}</strong> - No face detected`;
+        }
+      })
+      .catch(err => {
+        const timestamp = new Date().toLocaleTimeString();
+        resultDiv.innerHTML = `<div class="alert alert-danger">Network Error: ${err.message}</div>`;
+        frameInfoDiv.innerHTML = `<strong>Frame processed at ${timestamp}</strong> - Network error occurred`;
+      });
+    };
+  </script>
+</body>
+</html>

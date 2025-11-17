@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Students</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { 
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                  url('https://miro.medium.com/v2/resize:fit:2000/1*DPNoWJ3Au35Fw58Sn2oj1w.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+    }
+    .navbar-brand img { width: 40px; height: 40px; object-fit: contain; }
+    .card { background: rgba(255,255,255,0.95); color: #333; }
+    .table { background: rgba(255,255,255,0.98); }
+    footer {
+      background-color: #212529;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="https://miro.medium.com/v2/resize:fit:2000/1*DPNoWJ3Au35Fw58Sn2oj1w.png" alt="Logo" width="40" height="40" class="rounded-circle me-2"> FaceRecSys
+    </a>
+    
+    <!-- Hamburger toggle button for mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+      {% if session.get('user') %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ url_for('student') }}">Students</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('attendance') }}">Attendance</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('setting') }}">Settings</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('help_page') }}">Help</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+      {% else %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('why_choose') }}">Why Choose Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+</nav>
+
+<div class="container mt-5">
+  <h2 class="text-center text-primary">Student Management</h2>
+  <p class="text-center">Manage registered students and their face recognition data.</p>
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true, category_filter=['success', 'danger', 'warning', 'info']) %}
+      {% if messages %}
+          {% for category, message in messages %}
+              <div class="alert alert-{{ 'danger' if category == 'danger' else 'success' }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+          {% endfor %}
+      {% endif %}
+  {% endwith %}
+
+  <!-- Add Student Form -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5><i class="bi bi-person-plus"></i> Add New Student</h5>
+    </div>
+    <div class="card-body">
+      <form action="{{ url_for('add_student') }}" method="post" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-md-2">
+            <input type="text" name="serial_number" class="form-control" placeholder="Serial Number" required>
+          </div>
+          <div class="col-md-3">
+            <input type="text" name="username" class="form-control" placeholder="Student Name" required>
+          </div>
+          <div class="col-md-3">
+            <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+          </div>
+          <div class="col-md-2">
+            <input type="text" name="phone" class="form-control" placeholder="Phone (10 digits)" maxlength="10" pattern="[0-9]{10}" required>
+          </div>
+          <div class="col-md-2">
+            <input type="file" name="photo" class="form-control" accept="image/*" required>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-plus-circle"></i> Add Student
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Students Table -->
+  <div class="card">
+    <div class="card-header">
+      <h5><i class="bi bi-people"></i> Registered Students ({{ students|length }})</h5>
+    </div>
+    <div class="card-body">
+      {% if students %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Serial #</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Face Registered</th>
+              <th>Registration Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in students %}
+            <tr>
+              <td><span class="badge bg-primary">{{ student[1] }}</span></td>
+              <td>{{ student[2] }}</td>
+              <td>{{ student[3] }}</td>
+              <td>{{ student[4] }}</td>
+              <td>
+                {% if student[5] %}
+                  <span class="badge bg-success"><i class="bi bi-check-circle"></i> Yes</span>
+                {% else %}
+                  <span class="badge bg-warning"><i class="bi bi-x-circle"></i> No</span>
+                {% endif %}
+              </td>
+              <td>{{ student[6].strftime('%Y-%m-%d %H:%M') if student[6] else 'N/A' }}</td>
+              <td>
+                <a href="{{ url_for('view_student', student_id=student[0]) }}" class="btn btn-sm btn-outline-primary" title="View Details">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <a href="{{ url_for('edit_student', student_id=student[0]) }}" class="btn btn-sm btn-outline-warning" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <form method="post" action="{{ url_for('delete_student', student_id=student[0]) }}" style="display: inline;" 
+                      onsubmit="return confirm('Are you sure you want to delete this student? This action cannot be undone.')">
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-4">
+        <i class="bi bi-people-fill" style="font-size: 3rem; color: #ccc;"></i>
+        <h5 class="mt-3 text-muted">No Students Registered Yet</h5>
+        <p class="text-muted">Use the form above to add your first student, or encourage students to self-register at the registration page.</p>
+        <a href="{{ url_for('register') }}" class="btn btn-outline-primary">
+          <i class="bi bi-arrow-right"></i> Go to Registration Page
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>© 2025 FaceRecSys | AI-Powered Attendance for Smart Institutions</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

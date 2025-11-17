@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+venv-py311/
+env/
+ENV/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+face_project.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+attendance.csv
+known_faces/*.png
+known_faces/*.jpg
+
+# Keep known_faces folder structure
+!known_faces/.gitkeep
+
+# Large files
+static/*.mp4
+
+# Sensitive
+*.env
+.env
+db_config.py

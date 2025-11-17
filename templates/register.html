@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        footer {
+            background-color: #212529;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 60px;
+        }
+    </style>
+    {% if session.get('user') %}
+        <script>
+            window.location.href = "{{ url_for('dashboard') }}";
+        </script>
+    {% endif %}
+    <style>
+        /* Futuristic Background */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><defs><pattern id="hexagon" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,2 52,15 52,37 30,50 8,37 8,15" fill="none" stroke="%23ffffff" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="60" height="60" fill="url(%23hexagon)"/></svg>');
+            animation: hexagonMove 25s linear infinite;
+            z-index: 1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><pattern id="circuit" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="2" fill="%2300ffff" opacity="0.2"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="3s" repeatCount="indefinite"/></circle><line x1="20" y1="0" x2="20" y2="40" stroke="%2300ffff" stroke-width="0.5" opacity="0.1"/><line x1="0" y1="20" x2="40" y2="20" stroke="%2300ffff" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="200" height="200" fill="url(%23circuit)"/></svg>');
+            animation: circuitFlow 30s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes hexagonMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-60px, -52px); }
+        }
+
+        @keyframes circuitFlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-40px, -40px); }
+        }
+
+        /* Floating particles */
+        .floating-particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: #00ffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ffff;
+            animation: float 6s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.7; }
+            25% { transform: translateY(-30px) translateX(15px); opacity: 1; }
+            50% { transform: translateY(-15px) translateX(-20px); opacity: 0.8; }
+            75% { transform: translateY(-35px) translateX(10px); opacity: 1; }
+        }
+
+        /* Main container positioning */
+        .container {
+            position: relative;
+            z-index: 10;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            margin: 40px auto;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .register-container:hover::before {
+            opacity: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.05; }
+            50% { transform: scale(1.1); opacity: 0.1; }
+        }
+
+        .register-container:hover {
+            border-color: rgba(0, 255, 255, 0.6);
+            box-shadow: 0 30px 60px rgba(0, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-align: center;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-label {
+            color: #00ffff;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 8px 0 15px 0;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(0, 255, 255, 0.6);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        select option {
+            background: #1a1a2e;
+            color: #ffffff;
+        }
+
+        button {
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            color: #000;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 15px;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        video, canvas {
+            display: block;
+            margin: 15px auto;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        video:hover, canvas:hover {
+            border-color: rgba(0, 255, 255, 0.6);
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.2);
+        }
+
+        #preview {
+            margin-top: 10px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .note {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 5px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Alert styling */
+        .alert {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            color: #ffffff;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .alert-danger {
+            border-color: rgba(255, 0, 100, 0.3);
+            background: rgba(255, 0, 100, 0.1);
+        }
+
+        .alert-success {
+            border-color: rgba(0, 255, 100, 0.3);
+            background: rgba(0, 255, 100, 0.1);
+        }
+
+        /* Add transparent overlay */
+        body > *:not(.floating-particle) {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Add floating particles -->
+    <div class="floating-particle" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+    <div class="floating-particle" style="top: 80%; left: 80%; animation-delay: 1s;"></div>
+    <div class="floating-particle" style="top: 30%; left: 70%; animation-delay: 2s;"></div>
+    <div class="floating-particle" style="top: 60%; left: 30%; animation-delay: 3s;"></div>
+    <div class="floating-particle" style="top: 20%; left: 90%; animation-delay: 4s;"></div>
+    <div class="floating-particle" style="top: 90%; left: 10%; animation-delay: 5s;"></div>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+      <img src="https://miro.medium.com/v2/resize:fit:2000/1*DPNoWJ3Au35Fw58Sn2oj1w.png" alt="Logo" width="40" height="40" class="rounded-circle me-2">
+      FaceRecSys
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('why_choose') }}">Why Choose Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Our Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('help_page') }}">Help</a></li>
+        {% if session.get('user') %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{{ url_for('register') }}">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container d-flex justify-content-center align-items-center" style="min-height:80vh;">
+    <div class="register-container">
+        <h2>Create an Account</h2>
+        
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'danger' else 'success' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="post" action="/register">
+            <!-- User Type Selection -->
+            <div class="mb-3">
+                <label for="user_type" class="form-label">Register as:</label>
+                <select name="user_type" id="user_type" class="form-select" required onchange="toggleFields()">
+                    <option value="" disabled selected>Select User Type</option>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                </select>
+            </div>
+            
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            
+            <!-- Student-specific fields -->
+            <div id="student_fields" style="display:none;">
+                <input type="text" name="serial_number" id="serial_number" placeholder="Serial Number (e.g., 001, ST123, etc.)" maxlength="10" pattern="[A-Za-z0-9]+">
+                <input type="text" name="phone" id="phone" placeholder="Phone Number (10 digits)" maxlength="10" pattern="[0-9]{10}">
+            </div>
+            
+            <!-- Teacher-specific fields -->
+            <div id="teacher_fields" style="display:none;">
+                <input type="text" name="teacher_secret" id="teacher_secret" placeholder="What is the teacher secret?" required>
+                <input type="password" name="password" id="password" placeholder="Password">
+            </div>
+            
+            <!-- Camera section - only for students -->
+            <div id="camera_section" style="display:none;">
+                <video id="video" width="320" height="240" autoplay style="display:none;"></video>
+                <div class="mt-2">
+                    <p class="text-muted small">Click the button below to start your camera and capture your face photo:</p>
+                    <button type="button" id="startCamera" class="btn btn-primary me-2">Start Camera</button>
+                    <button type="button" id="stopCamera" class="btn btn-secondary me-2" disabled>Stop Camera</button>
+                    <button type="button" onclick="capture()" class="btn btn-success">Capture Face</button>
+                </div>
+                <div id="cameraStatus" class="mt-2 text-muted"></div>
+                <input type="hidden" name="face_image" id="face_image">
+                <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+                <img id="preview" style="width: 200px; display: none;">
+            </div>
+            
+            <button type="submit">Register</button>
+        </form>
+        <div id="student_note" class="note" style="display:none;">Your face will be used for identification purposes.</div>
+    </div>
+</div>
+<!-- Footer -->
+<!-- Footer -->
+<footer style="background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); border-top: 1px solid rgba(0, 255, 255, 0.3); color: white; padding: 20px 0; text-align: center; margin-top: 60px; position: relative; z-index: 10;">
+    <p style="margin: 0; color: rgba(255, 255, 255, 0.8);">© 2025 FaceRecSys | AI-Powered Attendance for Smart Institutions</p>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const preview = document.getElementById('preview');
+        const faceImageInput = document.getElementById('face_image');
+        const startBtn = document.getElementById('startCamera');
+        const stopBtn = document.getElementById('stopCamera');
+        const statusDiv = document.getElementById('cameraStatus');
+        
+        let currentStream = null;
+
+        // Function to toggle fields based on user type
+        function toggleFields() {
+            const userType = document.getElementById('user_type').value;
+            const studentFields = document.getElementById('student_fields');
+            const teacherFields = document.getElementById('teacher_fields');
+            const cameraSection = document.getElementById('camera_section');
+            const studentNote = document.getElementById('student_note');
+            const serialNumberField = document.getElementById('serial_number');
+            const phoneField = document.getElementById('phone');
+            const passwordField = document.getElementById('password');
+            const teacherSecretField = document.getElementById('teacher_secret');
+            
+            if (userType === 'teacher') {
+                teacherFields.style.display = 'block';
+                studentFields.style.display = 'none';
+                cameraSection.style.display = 'none';
+                studentNote.style.display = 'none';
+                passwordField.required = true;
+                teacherSecretField.required = true;
+                serialNumberField.required = false;
+                phoneField.required = false;
+            } else if (userType === 'student') {
+                teacherFields.style.display = 'none';
+                studentFields.style.display = 'block';
+                cameraSection.style.display = 'block';
+                studentNote.style.display = 'block';
+                passwordField.required = false;
+                teacherSecretField.required = false;
+                serialNumberField.required = true;
+                phoneField.required = true;
+            } else {
+                teacherFields.style.display = 'none';
+                studentFields.style.display = 'none';
+                cameraSection.style.display = 'none';
+                studentNote.style.display = 'none';
+                passwordField.required = false;
+                teacherSecretField.required = false;
+                serialNumberField.required = false;
+                phoneField.required = false;
+            }
+        }
+
+        // Function to start camera
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    currentStream = stream;
+                    video.srcObject = stream;
+                    video.style.display = 'block'; // Show video element
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                    statusDiv.innerHTML = "Camera started. You can now capture your face.";
+                })
+                .catch(err => {
+                    statusDiv.innerHTML = `<span class="text-danger">Camera access denied: ${err.message}</span>`;
+                    console.error(err);
+                });
+        }
+
+        // Function to stop camera
+        function stopCamera() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
+                video.style.display = 'none'; // Hide video element
+                currentStream = null;
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                statusDiv.innerHTML = "Camera stopped. Click 'Start Camera' to begin again.";
+                preview.style.display = 'none';
+            }
+        }
+
+        // Initialize camera controls without starting
+        statusDiv.innerHTML = "Click 'Start Camera' to begin face capture.";
+
+        // Button event listeners
+        startBtn.onclick = startCamera;
+        stopBtn.onclick = stopCamera;
+
+        // Capture image
+        function capture() {
+            if (!currentStream) {
+                statusDiv.innerHTML = `<span class="text-danger">Camera not started. Please start camera first.</span>`;
+                return;
+            }
+
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/png');
+            preview.src = dataUrl;
+            preview.style.display = 'block';
+            faceImageInput.value = dataUrl;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            statusDiv.innerHTML = `Face captured at ${timestamp}. Ready to register!`;
+        }
+    </script>
+</script>
+</body>
+</html>
