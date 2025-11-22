@@ -463,10 +463,15 @@ def add_student():
     email = request.form.get('email')
     phone = request.form.get('phone')
     photo = request.files.get('photo')
+    face_image_data = request.form.get('face_image')  # Base64 from camera
     
-    # Validation
-    if not all([serial_number, username, email, phone, photo]):
-        flash("All fields including photo are required", "danger")
+    # Validation - either photo file OR camera capture required
+    if not all([serial_number, username, email, phone]):
+        flash("All fields are required", "danger")
+        return redirect(url_for('student'))
+    
+    if not photo and not face_image_data:
+        flash("Photo is required (upload file or capture from camera)", "danger")
         return redirect(url_for('student'))
     
     if len(serial_number) < 1 or len(serial_number) > 10 or not serial_number.isalnum():
@@ -485,8 +490,16 @@ def add_student():
         filename = f"{serial_number}_{username.replace(' ', '_')}.png"
         filepath = os.path.join(KNOWN_FACES_FOLDER, filename)
         
-        # Convert and save as PNG
-        img = Image.open(photo).convert('RGB')
+        # Handle camera capture (base64) or file upload
+        if face_image_data:
+            # Camera capture - decode base64
+            img_data = base64.b64decode(face_image_data.split(',')[1])
+            img = Image.open(BytesIO(img_data)).convert('RGB')
+        else:
+            # File upload
+            img = Image.open(photo).convert('RGB')
+        
+        # Save image
         img.save(filepath, format='PNG')
         
         # Extract face embedding
@@ -1115,7 +1128,7 @@ def edit_student(student_id):
         conn = __get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT id, serial_number, username, email, phone
+            SELECT id, serial_number, username, email, phone, face_encoding, created_at
             FROM students WHERE id = %s
         """, (student_id,))
         student = cursor.fetchone()

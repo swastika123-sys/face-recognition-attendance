@@ -82,7 +82,7 @@
       <h5><i class="bi bi-person-plus"></i> Add New Student</h5>
     </div>
     <div class="card-body">
-      <form action="{{ url_for('add_student') }}" method="post" enctype="multipart/form-data">
+      <form action="{{ url_for('add_student') }}" method="post" enctype="multipart/form-data" id="addStudentForm">
         <div class="row">
           <div class="col-md-2">
             <input type="text" name="serial_number" class="form-control" placeholder="Serial Number" required>
@@ -97,9 +97,34 @@
             <input type="text" name="phone" class="form-control" placeholder="Phone (10 digits)" maxlength="10" pattern="[0-9]{10}" required>
           </div>
           <div class="col-md-2">
-            <input type="file" name="photo" class="form-control" accept="image/*" required>
+            <div class="btn-group w-100" role="group">
+              <button type="button" class="btn btn-outline-secondary btn-sm" id="toggleCapture" title="Switch between file upload and camera">
+                <i class="bi bi-camera"></i>
+              </button>
+              <input type="file" name="photo" class="form-control" accept="image/*" id="fileInput" style="border-radius: 0 0.375rem 0.375rem 0;">
+            </div>
           </div>
         </div>
+        
+        <!-- Camera Capture Section (hidden by default) -->
+        <div class="row mt-3" id="cameraSection" style="display: none;">
+          <div class="col-12 text-center">
+            <video id="video" width="320" height="240" autoplay style="border: 2px solid #00ffff; border-radius: 10px;"></video>
+            <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+            <div class="mt-2">
+              <button type="button" class="btn btn-success" id="captureBtn">
+                <i class="bi bi-camera-fill"></i> Capture Photo
+              </button>
+              <button type="button" class="btn btn-secondary" id="retakeBtn" style="display:none;">
+                <i class="bi bi-arrow-counterclockwise"></i> Retake
+              </button>
+            </div>
+            <div id="captureStatus" class="mt-2"></div>
+          </div>
+        </div>
+        
+        <input type="hidden" name="face_image" id="faceImageData">
+        
         <div class="row mt-2">
           <div class="col-12">
             <button type="submit" class="btn btn-primary">
@@ -185,5 +210,120 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Camera capture functionality for add student form
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const captureBtn = document.getElementById('captureBtn');
+const retakeBtn = document.getElementById('retakeBtn');
+const toggleCapture = document.getElementById('toggleCapture');
+const cameraSection = document.getElementById('cameraSection');
+const fileInput = document.getElementById('fileInput');
+const faceImageData = document.getElementById('faceImageData');
+const captureStatus = document.getElementById('captureStatus');
+const addStudentForm = document.getElementById('addStudentForm');
+
+let stream = null;
+let usingCamera = false;
+let photoCaptured = false;
+
+// Toggle between file upload and camera capture
+toggleCapture.addEventListener('click', function() {
+    usingCamera = !usingCamera;
+    
+    if (usingCamera) {
+        // Switch to camera mode
+        cameraSection.style.display = 'block';
+        fileInput.style.display = 'none';
+        fileInput.removeAttribute('required');
+        toggleCapture.innerHTML = '<i class="bi bi-file-earmark-arrow-up"></i>';
+        toggleCapture.title = 'Switch to file upload';
+        startCamera();
+    } else {
+        // Switch to file upload mode
+        cameraSection.style.display = 'none';
+        fileInput.style.display = 'block';
+        fileInput.setAttribute('required', 'required');
+        toggleCapture.innerHTML = '<i class="bi bi-camera"></i>';
+        toggleCapture.title = 'Switch to camera';
+        stopCamera();
+        faceImageData.value = '';
+        photoCaptured = false;
+    }
+});
+
+// Start camera
+function startCamera() {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(mediaStream) {
+            stream = mediaStream;
+            video.srcObject = stream;
+            video.style.display = 'block';
+            canvas.style.display = 'none';
+            captureBtn.style.display = 'inline-block';
+            retakeBtn.style.display = 'none';
+            captureStatus.innerHTML = '<span class="text-info"><i class="bi bi-camera-video"></i> Camera ready - position face and click capture</span>';
+        })
+        .catch(function(err) {
+            console.error('Camera access error:', err);
+            captureStatus.innerHTML = '<span class="text-danger"><i class="bi bi-exclamation-triangle"></i> Camera access denied</span>';
+        });
+}
+
+// Stop camera
+function stopCamera() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+        stream = null;
+    }
+}
+
+// Capture photo from camera
+captureBtn.addEventListener('click', function() {
+    const context = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Get base64 image data
+    const imageData = canvas.toDataURL('image/png');
+    faceImageData.value = imageData;
+    
+    // Show captured image
+    canvas.style.display = 'block';
+    video.style.display = 'none';
+    captureBtn.style.display = 'none';
+    retakeBtn.style.display = 'inline-block';
+    
+    captureStatus.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> Photo captured! Click "Add Student" to save or "Retake" to capture again</span>';
+    photoCaptured = true;
+    
+    // Stop camera to save resources
+    stopCamera();
+});
+
+// Retake photo
+retakeBtn.addEventListener('click', function() {
+    canvas.style.display = 'none';
+    video.style.display = 'block';
+    captureBtn.style.display = 'inline-block';
+    retakeBtn.style.display = 'none';
+    faceImageData.value = '';
+    photoCaptured = false;
+    captureStatus.innerHTML = '<span class="text-info"><i class="bi bi-camera-video"></i> Camera ready - position face and click capture</span>';
+    startCamera();
+});
+
+// Form submission validation
+addStudentForm.addEventListener('submit', function(e) {
+    if (usingCamera && !photoCaptured) {
+        e.preventDefault();
+        captureStatus.innerHTML = '<span class="text-danger"><i class="bi bi-exclamation-triangle"></i> Please capture a photo before submitting</span>';
+        return false;
+    }
+});
+</script>
 </body>
 </html>
